@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../api';
 import { Clock, Wallet, Upload, CheckCircle, AlertCircle, Share2, Link as LinkIcon } from 'lucide-react';
 
 const ProfessionalDashboard = () => {
@@ -69,7 +69,7 @@ const ProfessionalDashboard = () => {
             if (!token) return;
 
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('http://localhost:8080/api/auth/profile', config);
+            const { data } = await api.get('/auth/profile', config);
 
             if (data.profile) {
                 setPortfolio(data.profile.portfolio || []);
@@ -89,7 +89,7 @@ const ProfessionalDashboard = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.post('http://localhost:8080/api/payment/registration-fee', {}, config);
+            const { data } = await api.post('/payment/registration-fee', {}, config);
             setIsPaid(true);
             setStatus(data.status);
             updateProfile({ isPaid: true, status: data.status });
@@ -104,7 +104,7 @@ const ProfessionalDashboard = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put('http://localhost:8080/api/professional/update-description', { description: bio }, config);
+            await api.put('/professional/update-description', { description: bio }, config);
             alert("Self Introduction Updated Successfully!");
         } catch (error) {
             console.error(error);
@@ -286,7 +286,7 @@ const ProfessionalDashboard = () => {
                                                         'Content-Type': 'multipart/form-data'
                                                     }
                                                 };
-                                                await axios.post('http://localhost:8080/api/professional/upload', formData, config);
+                                                await api.post('/professional/upload', formData, config);
                                                 await fetchProfileData(); // Refresh list immediately
                                                 setDescription(''); // Clear description
                                                 alert("Upload Successful!");
@@ -353,7 +353,7 @@ const ProfessionalDashboard = () => {
                                 try {
                                     const token = JSON.parse(localStorage.getItem('userInfo')).token;
                                     const config = { headers: { Authorization: `Bearer ${token}` } };
-                                    const { data } = await axios.post('http://localhost:8080/api/professional/submit-application', {}, config);
+                                    const { data } = await api.post('/professional/submit-application', {}, config);
 
                                     alert("Application Submitted Successfully! Our team is reviewing your profile.");
                                     setStatus(data.status); // Update status to 'under_review'

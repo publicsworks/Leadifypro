@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Check, X, Clock } from 'lucide-react';
 
@@ -15,7 +15,7 @@ const AdminDashboard = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('http://localhost:8080/api/admin/pending', config);
+            const { data } = await api.get('/admin/pending', config);
             setPendingProfiles(data);
             setLoading(false);
         } catch (error) {
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.post('http://localhost:8080/api/admin/action', { id, action }, config);
+            await api.post('/admin/action', { id, action }, config);
             fetchPending(); // Refresh list
         } catch (error) {
             alert("Action failed");
