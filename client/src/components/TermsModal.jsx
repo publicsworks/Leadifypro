@@ -86,7 +86,7 @@ const TermsModal = ({ isOpen, onClose }) => {
                     <div>
                         <h3 className="text-base font-semibold text-gray-900 mb-1">10. Contact</h3>
                         <p className="text-xs">
-                            Questions? Email <a href="mailto:support@leadifypro.com" className="text-blue-600 hover:underline">support@leadifypro.com</a>
+                            Questions? Email <a href="mailto:support@leadifypro.online" className="text-blue-600 hover:underline">support@leadifypro.online</a>
                         </p>
                     </div>
 

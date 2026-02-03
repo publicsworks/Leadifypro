@@ -23,7 +23,7 @@ const Terms = () => {
                 </section>
                 <section>
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">5. Contact</h2>
-                    <p>For any questions regarding these terms, please contact us at support@leadifypro.com.</p>
+                    <p>For any questions regarding these terms, please contact us at support@leadifypro.online.</p>
                 </section>
             </div>
         </div>

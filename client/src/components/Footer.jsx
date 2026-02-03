@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -10,23 +10,9 @@ const Footer = () => {
                     {/* Company Info */}
                     <div>
                         <h3 className="text-white text-xl font-bold mb-4">Leadifypro</h3>
-                        <p className="text-sm mb-4">
+                        <p className="text-sm">
                             Connecting skilled professionals with clients who need their expertise. Build your career or find the perfect expert.
                         </p>
-                        <div className="flex gap-3">
-                            <a href="#" className="hover:text-blue-400 transition-colors">
-                                <Facebook size={20} />
-                            </a>
-                            <a href="#" className="hover:text-blue-400 transition-colors">
-                                <Twitter size={20} />
-                            </a>
-                            <a href="#" className="hover:text-blue-400 transition-colors">
-                                <Linkedin size={20} />
-                            </a>
-                            <a href="#" className="hover:text-blue-400 transition-colors">
-                                <Instagram size={20} />
-                            </a>
-                        </div>
                     </div>
 
                     {/* Quick Links */}
@@ -67,13 +53,9 @@ const Footer = () => {
                         <ul className="space-y-3 text-sm">
                             <li className="flex items-center gap-2">
                                 <Mail size={16} />
-                                <a href="mailto:support@leadifypro.com" className="hover:text-white transition-colors">
-                                    support@leadifypro.com
+                                <a href="mailto:support@leadifypro.online" className="hover:text-white transition-colors">
+                                    support@leadifypro.online
                                 </a>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <MapPin size={16} className="mt-1" />
-                                <span>Bangalore, Karnataka, India</span>
                             </li>
                         </ul>
                     </div>
