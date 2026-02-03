@@ -53,16 +53,10 @@ const Footer = () => {
                         <h4 className="text-white font-semibold mb-4">Support</h4>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <a href="#" className="hover:text-white transition-colors">Help Center</a>
+                                <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-white transition-colors">FAQs</a>
+                                <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                             </li>
                         </ul>
                     </div>
@@ -75,12 +69,6 @@ const Footer = () => {
                                 <Mail size={16} />
                                 <a href="mailto:support@leadifypro.com" className="hover:text-white transition-colors">
                                     support@leadifypro.com
-                                </a>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <Phone size={16} />
-                                <a href="tel:+919876543210" className="hover:text-white transition-colors">
-                                    +91 98765 43210
                                 </a>
                             </li>
                             <li className="flex items-start gap-2">
