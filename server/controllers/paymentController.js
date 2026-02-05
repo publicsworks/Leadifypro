@@ -117,7 +117,14 @@ exports.cashfreeWebhook = async (req, res) => {
         const paymentStatus = data.payment.payment_status;
 
         if (paymentStatus === 'SUCCESS') {
-            const userId = orderId.split('_')[1];
+            const parts = orderId.split('_');
+            const userId = parts.length > 1 ? parts[1] : null; // Safe extraction
+
+            if (!userId) {
+                console.log(`Webhook received for non-standard Order ID: ${orderId} (Likely a Test Event)`);
+                return res.status(200).send('Webhook ignore (Test Event)');
+            }
+
             const transactionId = data.payment.cf_payment_id;
 
             await handleSuccessfulPayment(userId, transactionId);
