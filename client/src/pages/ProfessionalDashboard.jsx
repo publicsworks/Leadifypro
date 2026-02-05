@@ -38,6 +38,32 @@ const ProfessionalDashboard = () => {
         fetchProfileData();
     };
 
+    // Verify Payment and Refresh Profile
+    const verifyPayment = async () => {
+        try {
+            const token = JSON.parse(localStorage.getItem('userInfo')).token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await api.post('/payment/verify-payment', {}, config);
+            // Refresh profile to update UI
+            fetchProfileData();
+        } catch (error) {
+            console.error("Payment verification failed", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchProfileData();
+
+        // Check if returning from Cashfree payment
+        const queryParams = new URLSearchParams(location.search);
+        const orderId = queryParams.get('order_id');
+        if (orderId) {
+            verifyPayment();
+            // Clean URL
+            window.history.replaceState({}, document.title, location.pathname);
+        }
+    }, [location]);
+
     useEffect(() => {
         const calculateTime = () => {
             let createdAt = user?.createdAt;

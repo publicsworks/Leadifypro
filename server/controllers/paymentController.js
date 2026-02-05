@@ -28,7 +28,8 @@ exports.createRegistrationOrder = async (req, res) => {
                 customer_email: user.email
             },
             order_meta: {
-                payment_methods: "cc,dc,nb,upi"
+                payment_methods: "cc,dc,nb,upi",
+                return_url: "https://leadifypro.online/dashboard/professional?order_id={order_id}"
             }
         };
 

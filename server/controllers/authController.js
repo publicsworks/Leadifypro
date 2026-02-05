@@ -16,12 +16,7 @@ exports.registerUser = async (req, res) => {
     const { name, email, password, role, category, referredBy } = req.body;
 
     try {
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
-        user = await User.create({
+        const user = await User.create({
             name,
             email,
             password,
@@ -48,6 +43,9 @@ exports.registerUser = async (req, res) => {
             token: generateToken(user._id)
         });
     } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
