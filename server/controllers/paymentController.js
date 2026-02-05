@@ -44,7 +44,15 @@ exports.createRegistrationOrder = async (req, res) => {
 };
 
 // Helper to finalize payment success logic
+const mongoose = require('mongoose');
+
 const handleSuccessfulPayment = async (userId, transactionId) => {
+    // Validate if userId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        console.log(`Invalid User ID in payment (likely test event): ${userId}`);
+        return;
+    }
+
     const profile = await ProfessionalProfile.findOne({ user: userId });
     if (!profile || profile.isPaid) return;
 
