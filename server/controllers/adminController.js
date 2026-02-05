@@ -13,7 +13,7 @@ exports.getPendingApprovals = async (req, res) => {
 };
 
 exports.updateProfileStatus = async (req, res) => {
-    const { id, action } = req.body; // action: 'approve' | 'reject'
+    const { id, action } = req.body;
 
     try {
         const profile = await ProfessionalProfile.findById(id);
@@ -23,10 +23,8 @@ exports.updateProfileStatus = async (req, res) => {
 
         if (action === 'approve') {
             profile.status = 'approved';
-            // Grant initial leads if needed
         } else if (action === 'reject') {
-            profile.status = 'inactive'; // or 'rejected'
-            // No refund logic needed as per requirements
+            profile.status = 'rejected';
         } else {
             return res.status(400).json({ message: 'Invalid action' });
         }
