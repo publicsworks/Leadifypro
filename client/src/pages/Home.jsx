@@ -7,7 +7,7 @@ const Home = () => {
         <div className="animate-fade-in space-y-20">
             {/* Hero Section */}
             <section className="text-center py-20 px-4 bg-gradient-to-b from-blue-50 to-transparent rounded-3xl">
-                <h1 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight text-slate-900">
+                <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight text-slate-900">
                     Get Real Clients for <span className="text-blue-600">Your Real Work</span>
                 </h1>
                 <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">

@@ -21,80 +21,83 @@ const TermsModal = ({ isOpen, onClose }) => {
                 {/* Content */}
                 <div className="overflow-y-auto p-6 space-y-2 text-gray-700">
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">1. Acceptance of Terms</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">1️⃣ Acceptance of Terms</h3>
                         <p className="text-xs">
-                            By using Leadifypro, you agree to these terms. Don't agree? Please don't use our service.
+                            LeadifyPro ka use karne par aap in sabhi Terms & Conditions se sahmat hote hain. Agar aap in terms se agree nahi karte, to kripya platform ka use na karein.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">2. Registration Fee</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">2️⃣ Service Description</h3>
                         <p className="text-xs">
-                            ₹1 one-time fee. <strong>Non-refundable</strong> even if your application is rejected.
+                            LeadifyPro ek software-based platform hai jo professionals aur potential clients ke beech connection facilitate karta hai. Hum kisi bhi business outcome ya earning ki guarantee nahi dete.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">3. Profile Approval</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">3️⃣ Registration Fee</h3>
                         <p className="text-xs">
-                            Admin reviews all profiles. We may reject profiles that don't meet quality standards.
+                            Ek nominal one-time registration fee lagu ho sakti hai. Refunds, agar koi ho, to hamari Refund Policy ke anusar hi process kiye jaayenge.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">4. Referral Program</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">4️⃣ Account Registration & Accuracy</h3>
                         <p className="text-xs">
-                            Refer within 24h = ₹100. After 24h = ₹50. Rewards go to your wallet.
+                            Users ko registration ke samay sahi, complete aur updated information dena zaroori hai. Galat ya misleading information dene par account suspend ya terminate kiya ja sakta hai.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">5. User Conduct</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">5️⃣ Profile Review & Approval</h3>
                         <p className="text-xs">
-                            Provide accurate info. Be professional. No fraud. Violations = account suspension.
+                            Sabhi profiles platform quality aur compliance ensure karne ke liye review ki jaati hain. LeadifyPro kisi bhi profile ko approve ya reject karne ka adhikar rakhta hai.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">6. Intellectual Property</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">6️⃣ User Conduct</h3>
                         <p className="text-xs">
-                            Your content stays yours. We can display it on our platform to connect you with clients.
+                            Users ko platform ka use legal, ethical aur professional tareeke se karna hoga. Fraud, misuse ya kisi bhi tarah ki illegal activity strictly prohibited hai.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">7. Privacy and Data</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">7️⃣ Referral & Promotions</h3>
                         <p className="text-xs">
-                            Your data is safe. We won't share it with others without your permission.
+                            LeadifyPro time-to-time promotional ya referral benefits offer kar sakta hai. Ye benefits internal verification aur applicable terms ke subject honge.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">8. Limitation of Liability</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">8️⃣ Intellectual Property</h3>
                         <p className="text-xs">
-                            We connect professionals with clients. We're not responsible for service quality or disputes.
+                            Platform par upload ki gayi user content ka ownership user ke paas rahega. User LeadifyPro ko platform operation aur promotion ke liye limited right deta hai.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">9. Modifications</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">9️⃣ Privacy & Data Protection</h3>
                         <p className="text-xs">
-                            We can update these terms anytime. Continued use means you accept the changes.
+                            User data ko Privacy Policy ke anusar securely handle kiya jaata hai. Bina user consent ke data third parties ke saath share nahi kiya jaata.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">10. Contact</h3>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">🔟 Limitation of Liability</h3>
                         <p className="text-xs">
-                            Questions? Email <a href="mailto:support@leadifypro.online" className="text-blue-600 hover:underline">support@leadifypro.online</a>
+                            LeadifyPro professionals aur clients ke beech sirf ek connecting platform hai. Services, disputes ya outcomes ke liye LeadifyPro zimmedar nahi hoga.
                         </p>
                     </div>
 
-                    <div className="bg-gray-50 p-3 rounded-lg mt-2">
-                        <p className="text-xs text-gray-600">
-                            Last updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    <div>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">1️⃣1️⃣ Modifications to Terms</h3>
+                        <p className="text-xs">
+                            LeadifyPro bina prior notice ke in Terms & Conditions ko update ya modify kar sakta hai. Platform ka continued use updated terms ki acceptance maana jaayega.
                         </p>
                     </div>
+
+
                 </div>
 
                 {/* Footer */}
