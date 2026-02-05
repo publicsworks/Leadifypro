@@ -113,7 +113,7 @@ const ProfessionalDashboard = () => {
 
             const checkoutOptions = {
                 paymentSessionId: orderData.payment_session_id,
-                redirectTarget: "_modal", // Opens in a modal for better UX
+                redirectTarget: "_self", // Redirects in the same tab
             };
 
             // 3. Trigger Checkout

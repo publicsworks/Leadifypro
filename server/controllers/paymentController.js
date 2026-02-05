@@ -32,7 +32,7 @@ exports.createRegistrationOrder = async (req, res) => {
             }
         };
 
-        const response = await Cashfree.PGCreateOrder("2023-08-01", request);
+        const response = await Cashfree.PGCreateOrder(request);
         res.json({
             payment_session_id: response.data.payment_session_id,
             order_id: response.data.order_id
