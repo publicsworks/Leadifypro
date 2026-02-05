@@ -18,7 +18,7 @@ exports.createRegistrationOrder = async (req, res) => {
         }
 
         const request = {
-            order_amount: 250,
+            order_amount: 1,
             order_currency: "INR",
             order_id: `reg_${userId}_${Date.now()}`,
             customer_details: {

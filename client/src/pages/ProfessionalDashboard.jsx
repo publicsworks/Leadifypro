@@ -93,7 +93,7 @@ const ProfessionalDashboard = () => {
     };
 
     const handlePayment = async () => {
-        if (!window.confirm("I agree that ₹250 is non-refundable even if my work is rejected.")) return;
+        if (!window.confirm("I agree that ₹1 is non-refundable even if my work is rejected.")) return;
 
         try {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;

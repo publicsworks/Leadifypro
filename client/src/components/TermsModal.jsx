@@ -30,7 +30,7 @@ const TermsModal = ({ isOpen, onClose }) => {
                     <div>
                         <h3 className="text-base font-semibold text-gray-900 mb-1">2. Registration Fee</h3>
                         <p className="text-xs">
-                            ₹250 one-time fee. <strong>Non-refundable</strong> even if your application is rejected.
+                            ₹1 one-time fee. <strong>Non-refundable</strong> even if your application is rejected.
                         </p>
                     </div>
 
