@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 
 // Special middleware to capture raw body for Cashfree Webhooks
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
+app.use('/api/payment/webhook', express.raw({ type: '*/*' }));
 
 app.use(express.json());
 

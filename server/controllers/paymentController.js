@@ -1,5 +1,5 @@
 const ProfessionalProfile = require('../models/ProfessionalProfile');
-const User = require('../models/User');
+const crypto = require('crypto');
 const Cashfree = require('../config/cashfree');
 
 // Create Cashfree Order Session
@@ -109,18 +109,33 @@ exports.cashfreeWebhook = async (req, res) => {
     try {
         const signature = req.headers['x-webhook-signature'];
         const timestamp = req.headers['x-webhook-timestamp'];
+        const secretKey = process.env.CASHFREE_SECRET_KEY;
 
-        // Use raw body buffer if available (captured in index.js)
-        const rawBody = req.body instanceof Buffer ? req.body.toString('utf8') : JSON.stringify(req.body);
-        const body = req.body instanceof Buffer ? JSON.parse(rawBody) : req.body;
+        let rawBody;
+        if (req.body instanceof Buffer) {
+            rawBody = req.body.toString('utf8');
+        } else if (typeof req.body === 'string') {
+            rawBody = req.body;
+        } else {
+            rawBody = JSON.stringify(req.body);
+        }
 
         try {
-            Cashfree.PGVerifyWebhookSignature(signature, rawBody, timestamp);
+            const genSignature = crypto.createHmac('sha256', secretKey)
+                .update(timestamp + rawBody)
+                .digest("base64");
+
+            if (genSignature !== signature) {
+                console.error("Webhook Signature Verification Failed");
+                // Return 200 to allow Cashfree Dashboard test to pass
+                return res.status(200).send('Signature Verification Failed');
+            }
         } catch (err) {
-            console.error("Webhook Signature Verification Failed:", err.message);
-            // Return 200 to allow Cashfree Dashboard test to pass, but DO NOT process the payload.
-            return res.status(200).send('Signature Verification Failed');
+            console.error("Webhook Verify Error:", err.message);
+            return res.status(200).send('Verification Error');
         }
+
+        const body = JSON.parse(rawBody);
 
         const { data } = body;
         const orderId = data.order.order_id;
