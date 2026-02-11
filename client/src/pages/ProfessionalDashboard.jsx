@@ -132,9 +132,9 @@ const ProfessionalDashboard = () => {
                 throw new Error("Failed to initialize payment session");
             }
 
-            // 2. Initialize Cashfree SDK
-            const cashfree = window.Cashfree({
-                mode: "production" // as requested
+            // 2. Initialize Cashfree SDK (Correct v3 method)
+            const cashfree = await window.Cashfree.load({
+                mode: "production"
             });
 
             const checkoutOptions = {
@@ -176,7 +176,7 @@ const ProfessionalDashboard = () => {
 
         } catch (error) {
             console.error("Payment Error:", error);
-            alert(error.response?.data?.message || "Payment failed to start. Please check your connection.");
+            alert(error.response?.data?.message || "Payment initialization failed");
         }
     };
 
