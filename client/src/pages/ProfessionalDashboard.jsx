@@ -125,23 +125,33 @@ const ProfessionalDashboard = () => {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
 
+            console.log("Step 1: Creating order...");
             // 1. Create Order Session on Backend
             const { data: orderData } = await api.post('/payment/create-order', {}, config);
+            console.log("Order created:", orderData);
 
             if (!orderData.payment_session_id) {
                 throw new Error("Failed to initialize payment session");
             }
 
-            // 2. Initialize Cashfree SDK (Correct v3 method)
+            console.log("Step 2: Loading Cashfree SDK...");
+            // 2. Check if Cashfree SDK is available
+            if (!window.Cashfree) {
+                throw new Error("Cashfree SDK not loaded. Please refresh the page.");
+            }
+
+            // Initialize Cashfree SDK (Correct v3 method)
             const cashfree = await window.Cashfree.load({
                 mode: "production"
             });
+            console.log("Cashfree SDK loaded successfully");
 
             const checkoutOptions = {
                 paymentSessionId: orderData.payment_session_id,
                 redirectTarget: "_self", // Redirects in the same tab
             };
 
+            console.log("Step 3: Opening checkout...");
             // 3. Trigger Checkout
             cashfree.checkout(checkoutOptions).then(async (result) => {
                 if (result.error) {
@@ -172,11 +182,14 @@ const ProfessionalDashboard = () => {
                 } catch (err) {
                     console.log("Verification check (might be cancelled):", err.response?.data?.message);
                 }
+            }).catch((error) => {
+                console.error("Checkout error:", error);
+                alert("Failed to open payment page: " + error.message);
             });
 
         } catch (error) {
             console.error("Payment Error:", error);
-            alert(error.response?.data?.message || "Payment initialization failed");
+            alert(error.response?.data?.message || error.message || "Payment initialization failed");
         }
     };
 

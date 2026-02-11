@@ -1,4 +1,5 @@
 const ProfessionalProfile = require('../models/ProfessionalProfile');
+const User = require('../models/User');
 const crypto = require('crypto');
 const Cashfree = require('../config/cashfree');
 
