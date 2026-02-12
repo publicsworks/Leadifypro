@@ -263,6 +263,20 @@ const ProfessionalDashboard = () => {
                         </div>
                     </div>
                     <PaymentSection onPayment={handlePayment} />
+
+                    {/* Manual Check Button for safety */}
+                    <div className="text-center">
+                        <p className="text-sm text-gray-500 mb-2">Already paid but dashboard didn't unlock?</p>
+                        <button
+                            onClick={() => {
+                                alert("Checking payment status...");
+                                fetchProfileData();
+                            }}
+                            className="text-blue-600 underline text-sm hover:text-blue-800"
+                        >
+                            Click here to refresh status
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <>
