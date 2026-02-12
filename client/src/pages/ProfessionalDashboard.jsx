@@ -51,6 +51,22 @@ const ProfessionalDashboard = () => {
             const response = await api.post('/payment/verify-payment', { order_id: orderId }, config);
             console.log("Backend response:", response.data);
 
+            if (response.data.isPaid) {
+                // Immediate State Update (Fix for UI lag)
+                setIsPaid(true);
+                setStatus(response.data.status);
+
+                // Update Global Context
+                if (updateProfile) {
+                    updateProfile({
+                        isPaid: true,
+                        status: response.data.status
+                    });
+                }
+
+                alert("Payment Successful! Profile unlocked.");
+            }
+
             // Refresh profile to update UI
             console.log("Refreshing profile data...");
             await fetchProfileData();
@@ -58,6 +74,9 @@ const ProfessionalDashboard = () => {
         } catch (error) {
             console.error("=== FRONTEND: Payment verification failed ===");
             console.error("Error:", error.response?.data || error.message);
+            // Even if API fails (e.g. timeout), if we have order_id, 
+            // we should try fetching profile again just in case webhook worked
+            await fetchProfileData();
         }
     };
 
@@ -222,72 +241,94 @@ const ProfessionalDashboard = () => {
                 )}
             </div>
 
-            {/* Main Stats Grid */}
-            <div className="grid md:grid-cols-3 gap-6">
-                <StatCard
-                    icon={Wallet}
-                    title="Wallet Balance"
-                    value={`₹${user?.walletBalance || 0}`}
-                    subtext="Available for leads or ads"
-                    color="bg-green-100 text-green-600"
-                    action={
-                        <button className="text-xs bg-green-600 text-white px-3 py-1 rounded-lg hover:bg-green-700 transition-colors">
-                            Withdraw
-                        </button>
-                    }
-                />
-
-                <StatCard
-                    icon={Clock}
-                    title="Referral Bonus"
-                    value={timeLeft?.includes(':') ? timeLeft : '---'}
-                    subtext={timeLeft === "Offer Expired" ? "Standard rewards active" : "Double rewards ending soon!"}
-                    color="bg-purple-100 text-purple-600"
-                />
-
-                <StatCard
-                    icon={TrendingUp}
-                    title="Current Status"
-                    value={
-                        status === 'pending_submission' ? 'COMPLETE YOUR PROFILE' :
-                            status === 'under_review' ? 'UNDER REVIEW' :
-                                status === 'approved' ? 'APPROVED' :
-                                    status === 'rejected' ? 'REJECTED' :
-                                        'PENDING PAYMENT'
-                    }
-                    subtext={
-                        status === 'pending_submission' ? 'Upload your portfolio to get verified' :
-                            'Keep your profile updated'
-                    }
-                    color={status === 'approved' ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600'}
-                />
-            </div>
-
-            {/* Approved - Leads Section */}
-            {status === 'approved' && <LeadsSection />}
-
-            {/* Referral Management */}
-            <ReferralSection referralCode={referralCode} />
-
-            {/* Payment Section */}
-            {!isPaid && <PaymentSection onPayment={handlePayment} />}
-
-            {/* Portfolio Sections (Only if Paid) */}
-            {isPaid && (
-                <div className="space-y-10">
-                    <BioSection
-                        bio={bio}
-                        setBio={setBio}
-                        isLocked={isLocked}
-                        onSave={handleBioUpdate}
-                    />
-
-                    {!isLocked && (
-                        <PortfolioUpload onUploadSuccess={fetchProfileData} />
-                    )}
-
-                    <PortfolioGrid portfolio={portfolio} />
+            {/* Payment Gatekeeper */}
+            {!isPaid ? (
+                <div className="space-y-8">
+                    <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg shadow-sm">
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <Clock className="h-6 w-6 text-blue-500" />
+                            </div>
+                            <div className="ml-4">
+                                <h3 className="text-lg leading-6 font-medium text-blue-900">
+                                    Registration Required
+                                </h3>
+                                <div className="mt-2 text-sm text-blue-700">
+                                    <p>
+                                        Complete your one-time registration payment of ₹1 to unlock your professional dashboard.
+                                        Once paid, you can upload your portfolio, get verified, and start receiving quality leads.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <PaymentSection onPayment={handlePayment} />
                 </div>
+            ) : (
+                <>
+                    {/* Main Stats Grid - Only visible after payment */}
+                    <div className="grid md:grid-cols-3 gap-6 animate-fade-in-up">
+                        <StatCard
+                            icon={Wallet}
+                            title="Wallet Balance"
+                            value={`₹${user?.walletBalance || 0}`}
+                            subtext="Available for leads or ads"
+                            color="bg-green-100 text-green-600"
+                            action={
+                                <button className="text-xs bg-green-600 text-white px-3 py-1 rounded-lg hover:bg-green-700 transition-colors shadow-sm">
+                                    Withdraw
+                                </button>
+                            }
+                        />
+
+                        <StatCard
+                            icon={Clock}
+                            title="Referral Bonus"
+                            value={timeLeft?.includes(':') ? timeLeft : '---'}
+                            subtext={timeLeft === "Offer Expired" ? "Standard rewards active" : "Double rewards ending soon!"}
+                            color="bg-purple-100 text-purple-600"
+                        />
+
+                        <StatCard
+                            icon={TrendingUp}
+                            title="Current Status"
+                            value={
+                                status === 'pending_submission' ? 'COMPLETE YOUR PROFILE' :
+                                    status === 'under_review' ? 'UNDER REVIEW' :
+                                        status === 'approved' ? 'APPROVED' :
+                                            status === 'rejected' ? 'REJECTED' :
+                                                'PAID'
+                            }
+                            subtext={
+                                status === 'pending_submission' ? 'Upload your portfolio to get verified' :
+                                    'Keep your profile updated'
+                            }
+                            color={status === 'approved' ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600'}
+                        />
+                    </div>
+
+                    {/* Approved - Leads Section */}
+                    {status === 'approved' && <LeadsSection />}
+
+                    {/* Referral Management */}
+                    <ReferralSection referralCode={referralCode} />
+
+                    {/* Portfolio Sections */}
+                    <div className="space-y-10">
+                        <BioSection
+                            bio={bio}
+                            setBio={setBio}
+                            isLocked={isLocked}
+                            onSave={handleBioUpdate}
+                        />
+
+                        {!isLocked && (
+                            <PortfolioUpload onUploadSuccess={fetchProfileData} />
+                        )}
+
+                        <PortfolioGrid portfolio={portfolio} />
+                    </div>
+                </>
             )}
 
             {/* Final Submit Button */}
