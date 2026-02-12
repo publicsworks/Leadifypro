@@ -17,7 +17,6 @@ const ProfessionalDashboard = () => {
     const [timeLeft, setTimeLeft] = useState('');
     const [isPaid, setIsPaid] = useState(false);
     const [status, setStatus] = useState('pending_payment');
-    const [status, setStatus] = useState('pending_payment');
     const [portfolio, setPortfolio] = useState([]);
     const [paymentAttempted, setPaymentAttempted] = useState(false);
 
@@ -157,9 +156,6 @@ const ProfessionalDashboard = () => {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
 
-            console.log("Step 1: Creating order...");
-            // 1. Create Order Session on Backend
-            const { data: orderData } = await api.post('/payment/create-order', {}, config);
             console.log("Step 1: Creating order...");
             // 1. Create Order Session on Backend
             const { data: orderData } = await api.post('/payment/create-order', {}, config);
