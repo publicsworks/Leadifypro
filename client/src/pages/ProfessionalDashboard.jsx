@@ -140,8 +140,8 @@ const ProfessionalDashboard = () => {
                 throw new Error("Cashfree SDK not loaded. Please refresh the page.");
             }
 
-            // Initialize Cashfree SDK (Correct v3 method)
-            const cashfree = await window.Cashfree.load({
+            // Initialize Cashfree SDK (v3 direct initialization)
+            const cashfree = window.Cashfree({
                 mode: "production"
             });
             console.log("Cashfree SDK loaded successfully");
