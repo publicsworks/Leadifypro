@@ -164,39 +164,10 @@ const ProfessionalDashboard = () => {
 
             console.log("Step 3: Opening checkout...");
             // 3. Trigger Checkout
-            cashfree.checkout(checkoutOptions).then(async (result) => {
-                if (result.error) {
-                    // This is for error during SDK load or configuration
-                    console.error("SDK Error:", result.error);
-                    alert("Payment failed to initialize. Please try again.");
-                }
-
-                if (result.redirect) {
-                    // This is for redirect flow, if applicable
-                    console.log("Redirecting...");
-                }
-
-                // Note: The modal closure or success is handled by checking the order status
-                // We'll call our verification endpoint
-                try {
-                    const { data: verifyData } = await api.post('/payment/verify-payment', {
-                        order_id: orderData.order_id
-                    }, config);
-
-                    if (verifyData.status) {
-                        setIsPaid(true);
-                        setStatus(verifyData.status);
-                        updateProfile({ isPaid: true, status: verifyData.status });
-                        alert("Payment Successful! Your profile is now Under Review.");
-                        fetchProfileData();
-                    }
-                } catch (err) {
-                    console.log("Verification check (might be cancelled):", err.response?.data?.message);
-                }
-            }).catch((error) => {
-                console.error("Checkout error:", error);
-                alert("Failed to open payment page: " + error.message);
-            });
+            // Note: We don't handle the promise here - Cashfree will automatically
+            // redirect to return_url after payment success
+            cashfree.checkout(checkoutOptions);
+            console.log("Checkout initiated - waiting for Cashfree redirect...");
 
         } catch (error) {
             console.error("Payment Error:", error);
@@ -277,8 +248,17 @@ const ProfessionalDashboard = () => {
                 <StatCard
                     icon={TrendingUp}
                     title="Current Status"
-                    value={status?.replace('_', ' ').toUpperCase() || 'PENDING'}
-                    subtext="Keep your profile updated"
+                    value={
+                        status === 'pending_submission' ? 'COMPLETE YOUR PROFILE' :
+                            status === 'under_review' ? 'UNDER REVIEW' :
+                                status === 'approved' ? 'APPROVED' :
+                                    status === 'rejected' ? 'REJECTED' :
+                                        'PENDING PAYMENT'
+                    }
+                    subtext={
+                        status === 'pending_submission' ? 'Upload your portfolio to get verified' :
+                            'Keep your profile updated'
+                    }
                     color={status === 'approved' ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600'}
                 />
             </div>
