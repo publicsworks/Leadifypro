@@ -41,13 +41,23 @@ const ProfessionalDashboard = () => {
     // Verify Payment and Refresh Profile
     const verifyPayment = async (orderId) => {
         try {
+            console.log("=== FRONTEND: Starting payment verification ===");
+            console.log("Order ID:", orderId);
+
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await api.post('/payment/verify-payment', { order_id: orderId }, config);
+
+            console.log("Calling backend verify-payment API...");
+            const response = await api.post('/payment/verify-payment', { order_id: orderId }, config);
+            console.log("Backend response:", response.data);
+
             // Refresh profile to update UI
-            fetchProfileData();
+            console.log("Refreshing profile data...");
+            await fetchProfileData();
+            console.log("=== FRONTEND: Payment verification complete ===");
         } catch (error) {
-            console.error("Payment verification failed", error);
+            console.error("=== FRONTEND: Payment verification failed ===");
+            console.error("Error:", error.response?.data || error.message);
         }
     };
 

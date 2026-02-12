@@ -86,22 +86,87 @@ exports.verifyRegistrationPayment = async (req, res) => {
         const { order_id } = req.body;
         const userId = req.user.id;
 
-        const response = await Cashfree.PGOrderFetchPayments("2023-08-01", order_id);
-        const payments = response.data;
+        console.log("=== PAYMENT VERIFICATION START ===");
+        console.log("User ID:", userId);
+        console.log("Order ID from request:", order_id);
 
-        const successfulPayment = payments.find(p => p.payment_status === "SUCCESS");
+        // Check current profile status
+        const profile = await ProfessionalProfile.findOne({ user: userId });
 
-        if (!successfulPayment) {
-            return res.status(400).json({ message: 'Payment not successful' });
+        if (!profile) {
+            console.error("ERROR: Profile not found for user:", userId);
+            return res.status(404).json({ message: 'Profile not found' });
         }
 
-        await handleSuccessfulPayment(userId, successfulPayment.cf_payment_id);
+        console.log("Current profile status:", profile.status);
+        console.log("Current profile isPaid:", profile.isPaid);
 
-        const profile = await ProfessionalProfile.findOne({ user: userId });
-        res.json({ message: 'Payment verified successfully', status: profile.status });
+        // If already paid (webhook processed it), just return success
+        if (profile.isPaid) {
+            console.log("Payment already verified by webhook");
+            console.log("=== PAYMENT VERIFICATION SUCCESS (Already Paid) ===");
+            return res.json({
+                message: 'Payment already verified',
+                status: profile.status,
+                isPaid: profile.isPaid
+            });
+        }
+
+        // If not paid yet, try fetching from Cashfree to verify
+        console.log("Payment not yet marked as paid, checking with Cashfree...");
+
+        if (!order_id) {
+            console.error("ERROR: No order_id provided and payment not verified by webhook");
+            return res.status(400).json({ message: 'Order ID is required for manual verification' });
+        }
+
+        try {
+            console.log("Fetching payment details from Cashfree...");
+            const response = await Cashfree.PGOrderFetchPayments("2023-08-01", order_id);
+            console.log("Cashfree API response received");
+
+            const payments = response.data;
+            const successfulPayment = payments.find(p => p.payment_status === "SUCCESS");
+
+            console.log("Successful payment found:", successfulPayment ? "YES" : "NO");
+
+            if (!successfulPayment) {
+                console.error("ERROR: No successful payment found for order:", order_id);
+                return res.status(400).json({ message: 'Payment not successful yet' });
+            }
+
+            console.log("Calling handleSuccessfulPayment...");
+            await handleSuccessfulPayment(userId, successfulPayment.cf_payment_id);
+            console.log("handleSuccessfulPayment completed");
+
+            // Fetch updated profile
+            const updatedProfile = await ProfessionalProfile.findOne({ user: userId });
+            console.log("Updated profile status:", updatedProfile.status);
+            console.log("Updated profile isPaid:", updatedProfile.isPaid);
+            console.log("=== PAYMENT VERIFICATION SUCCESS ===");
+
+            return res.json({
+                message: 'Payment verified successfully',
+                status: updatedProfile.status,
+                isPaid: updatedProfile.isPaid
+            });
+        } catch (cashfreeError) {
+            console.error("Cashfree API Error:", cashfreeError.message);
+            console.error("Cashfree API might be down or order_id invalid");
+
+            // Return current status even if Cashfree check fails
+            return res.json({
+                message: 'Could not verify with Cashfree, returning current status',
+                status: profile.status,
+                isPaid: profile.isPaid,
+                warning: 'Cashfree verification failed'
+            });
+        }
     } catch (error) {
-        console.error("Cashfree Verification Error:", error.response?.data || error.message);
-        res.status(500).json({ message: 'Payment verification failed' });
+        console.error("=== PAYMENT VERIFICATION ERROR ===");
+        console.error("Error details:", error.message);
+        console.error("Full error:", error);
+        res.status(500).json({ message: 'Payment verification failed', error: error.message });
     }
 };
 
