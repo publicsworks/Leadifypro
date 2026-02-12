@@ -1,7 +1,7 @@
 import React from 'react';
 import { Zap, CheckCircle } from 'lucide-react';
 
-const PaymentSection = ({ onPayment }) => {
+const PaymentSection = ({ onPayment, paymentAttempted, checkStatus }) => {
     return (
         <div className="bg-white p-10 rounded-3xl shadow-xl shadow-blue-50 border border-blue-50 text-center max-w-2xl mx-auto">
             <div className="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -19,9 +19,22 @@ const PaymentSection = ({ onPayment }) => {
                     <span>I agree that the ₹1 registration fee is <strong>non-refundable</strong>, as it covers the manual verification of my profile quality.</span>
                 </label>
             </div>
-            <button onClick={onPayment} className="w-full bg-blue-600 text-white py-5 rounded-2xl text-xl font-bold shadow-2xl shadow-blue-200 hover:bg-blue-700 transition-all transform hover:-translate-y-1">
-                Pay ₹1 & Get Started
-            </button>
+
+            {paymentAttempted ? (
+                <button
+                    onClick={() => {
+                        alert("Verifying payment status...");
+                        checkStatus();
+                    }}
+                    className="w-full bg-green-600 text-white py-5 rounded-2xl text-xl font-bold shadow-2xl shadow-green-200 hover:bg-green-700 transition-all transform hover:-translate-y-1 animate-pulse"
+                >
+                    Payment Complete? Get Started &rarr;
+                </button>
+            ) : (
+                <button onClick={onPayment} className="w-full bg-blue-600 text-white py-5 rounded-2xl text-xl font-bold shadow-2xl shadow-blue-200 hover:bg-blue-700 transition-all transform hover:-translate-y-1">
+                    Pay ₹1 & Get Started
+                </button>
+            )}
         </div>
     );
 };

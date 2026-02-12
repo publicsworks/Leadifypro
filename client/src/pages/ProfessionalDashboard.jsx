@@ -17,7 +17,9 @@ const ProfessionalDashboard = () => {
     const [timeLeft, setTimeLeft] = useState('');
     const [isPaid, setIsPaid] = useState(false);
     const [status, setStatus] = useState('pending_payment');
+    const [status, setStatus] = useState('pending_payment');
     const [portfolio, setPortfolio] = useState([]);
+    const [paymentAttempted, setPaymentAttempted] = useState(false);
 
     // Profile Bio (Self Introduction)
     const [bio, setBio] = useState('');
@@ -158,7 +160,11 @@ const ProfessionalDashboard = () => {
             console.log("Step 1: Creating order...");
             // 1. Create Order Session on Backend
             const { data: orderData } = await api.post('/payment/create-order', {}, config);
+            console.log("Step 1: Creating order...");
+            // 1. Create Order Session on Backend
+            const { data: orderData } = await api.post('/payment/create-order', {}, config);
             console.log("Order created:", orderData);
+            setPaymentAttempted(true); // Mark as attempted so button changes on return
 
             if (!orderData.payment_session_id) {
                 throw new Error("Failed to initialize payment session");
@@ -262,21 +268,11 @@ const ProfessionalDashboard = () => {
                             </div>
                         </div>
                     </div>
-                    <PaymentSection onPayment={handlePayment} />
-
-                    {/* Manual Check Button for safety */}
-                    <div className="text-center">
-                        <p className="text-sm text-gray-500 mb-2">Already paid but dashboard didn't unlock?</p>
-                        <button
-                            onClick={() => {
-                                alert("Checking payment status...");
-                                fetchProfileData();
-                            }}
-                            className="text-blue-600 underline text-sm hover:text-blue-800"
-                        >
-                            Click here to refresh status
-                        </button>
-                    </div>
+                    <PaymentSection
+                        onPayment={handlePayment}
+                        paymentAttempted={paymentAttempted}
+                        checkStatus={fetchProfileData}
+                    />
                 </div>
             ) : (
                 <>
