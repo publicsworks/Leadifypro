@@ -39,11 +39,11 @@ const ProfessionalDashboard = () => {
     };
 
     // Verify Payment and Refresh Profile
-    const verifyPayment = async () => {
+    const verifyPayment = async (orderId) => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo')).token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await api.post('/payment/verify-payment', {}, config);
+            await api.post('/payment/verify-payment', { order_id: orderId }, config);
             // Refresh profile to update UI
             fetchProfileData();
         } catch (error) {
@@ -58,7 +58,8 @@ const ProfessionalDashboard = () => {
         const queryParams = new URLSearchParams(location.search);
         const orderId = queryParams.get('order_id');
         if (orderId) {
-            verifyPayment();
+            console.log("Detected order_id in URL, verifying payment:", orderId);
+            verifyPayment(orderId);
             // Clean URL
             window.history.replaceState({}, document.title, location.pathname);
         }
