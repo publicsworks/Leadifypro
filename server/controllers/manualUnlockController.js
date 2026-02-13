@@ -5,7 +5,14 @@ const User = require('../models/User');
 // Use this ONLY when webhook fails and you need to manually verify a payment
 exports.manualPaymentUnlock = async (req, res) => {
     try {
-        const { email, orderId } = req.body;
+        const { email, orderId, adminSecret } = req.body;
+
+        // Security Check: Verify Admin Secret
+        const MASTER_SECRET = process.env.MANUAL_UNLOCK_SECRET || "LeadifyPro_Emergency_2026";
+        if (adminSecret !== MASTER_SECRET) {
+            console.warn(`Unauthorized Manual Unlock Attempt for: ${email}`);
+            return res.status(401).json({ message: 'Unauthorized: Invalid Admin Secret' });
+        }
 
         if (!email) {
             return res.status(400).json({ message: 'Email is required' });
