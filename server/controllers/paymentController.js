@@ -30,7 +30,8 @@ exports.createRegistrationOrder = async (req, res) => {
             },
             order_meta: {
                 payment_methods: "cc,dc,nb,upi",
-                return_url: "https://leadifypro.online/dashboard/professional?order_id={order_id}"
+                return_url: "https://leadifypro.online/dashboard/professional?order_id={order_id}",
+                notify_url: "https://leadifypro.online/api/payment/webhook"
             }
         };
 
@@ -202,22 +203,36 @@ exports.cashfreeWebhook = async (req, res) => {
         }
 
         const body = JSON.parse(rawBody);
+        console.log("Webhook Body Received:", JSON.stringify(body, null, 2)); // DEBUG LOG
 
-        const { data } = body;
-        const orderId = data.order.order_id;
-        const paymentStatus = data.payment.payment_status;
+        // Safe Logic to extract data based on version
+        let orderId, paymentStatus, transactionId;
+
+        if (body.data && body.data.order) {
+            // v2023-08-01 structure
+            orderId = body.data.order.order_id;
+            paymentStatus = body.data.payment.payment_status;
+            transactionId = body.data.payment.cf_payment_id;
+        } else if (body.order && body.order.orderId) {
+            // Older version fallback
+            orderId = body.order.orderId;
+            paymentStatus = body.payment.paymentStatus;
+            transactionId = body.payment.referenceId;
+        } else {
+            console.error("Unknown Webhook Structure:", body);
+            return res.status(200).send("Unknown Structure");
+        }
 
         if (paymentStatus === 'SUCCESS') {
             const parts = orderId.split('_');
-            const userId = parts.length > 1 ? parts[1] : null; // Safe extraction
+            const userId = parts.length > 1 ? parts[1] : null;
 
             if (!userId) {
                 console.log(`Webhook received for non-standard Order ID: ${orderId} (Likely a Test Event)`);
                 return res.status(200).send('Webhook ignore (Test Event)');
             }
 
-            const transactionId = data.payment.cf_payment_id;
-
+            console.log(`Processing Success Payment for User: ${userId}`);
             await handleSuccessfulPayment(userId, transactionId);
             console.log(`Webhook Processed OK: Order ${orderId}`);
         }
@@ -225,6 +240,7 @@ exports.cashfreeWebhook = async (req, res) => {
         res.status(200).send('Webhook Processed');
     } catch (error) {
         console.error("Webhook Processor Error:", error.message);
+        console.error("Full Error Stack:", error);
         res.status(500).send('Internal Server Error');
     }
 };
